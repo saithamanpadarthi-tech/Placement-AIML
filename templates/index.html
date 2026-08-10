@@ -21,12 +21,13 @@
                     Data Loading
                 </a>
             </li>
-            <li>
+             <li>
                 <a href="{{ url_for('eda_page') }}"
                    class="menu-item {% if active == 'eda' %}active{% endif %}">
                     EDA
                 </a>
             </li>
+
             <li class="menu-item disabled">Preprocessing (coming soon)</li>
             <li class="menu-item disabled">Model Training (coming soon)</li>
             <li class="menu-item disabled">Prediction (coming soon)</li>
@@ -35,51 +36,66 @@
 
     <!-- Main content -->
     <main class="content">
-        <h2>Exploratory Data Analysis</h2>
 
-        {% if error %}
-            <div class="error">{{ error }}</div>
+        {% if active == 'none' %}
+            <p>Select an option from the left panel to get started.</p>
         {% endif %}
 
-        {% if results %}
-            <table class="summary-table">
-                <tr><td>Rows</td><td>{{ results.n_rows }}</td></tr>
-                <tr><td>Columns</td><td>{{ results.n_cols }}</td></tr>
-                <tr><td>Duplicate rows</td><td>{{ results.duplicate_count }}</td></tr>
-            </table>
+        {% if active == 'data-loading' %}
+            <h2>Data Loading</h2>
 
-            {% if results.missing %}
-                <h3>Missing Values</h3>
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            {% if summary %}
+                <table class="summary-table">
+                    <tr><td>Rows</td><td>{{ summary.n_rows }}</td></tr>
+                    <tr><td>Columns</td><td>{{ summary.n_cols }}</td></tr>
+                </table>
+
+                <h3>Column Info</h3>
                 <div class="table-wrapper">
                     <table class="data-table">
                         <thead>
-                            <tr><th>Column</th><th>Missing Count</th></tr>
+                            <tr><th>Column</th><th>Dtype</th><th>Missing Values</th></tr>
                         </thead>
                         <tbody>
-                        {% for col, count in results.missing.items() %}
-                            <tr><td>{{ col }}</td><td>{{ count }}</td></tr>
+                        {% for col in summary.columns %}
+                            <tr>
+                                <td>{{ col }}</td>
+                                <td>{{ summary.dtypes[col] }}</td>
+                                <td>{{ summary.missing_counts[col] }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Preview (first 10 rows)</h3>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                            {% for col in summary.columns %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for row in summary.preview %}
+                            <tr>
+                            {% for col in summary.columns %}
+                                <td>{{ row[col] }}</td>
+                            {% endfor %}
+                            </tr>
                         {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% endif %}
-
-            <h3>Placement Status Counts</h3>
-            <table class="summary-table">
-                {% for status, count in results.target_counts.items() %}
-                <tr><td>{{ status }}</td><td>{{ count }}</td></tr>
-                {% endfor %}
-            </table>
-
-            <h3>Charts</h3>
-            <div class="chart-grid">
-                {% for fname in results.charts %}
-                <div class="chart-card">
-                    <img src="{{ url_for('static', filename='charts/' + fname) }}" alt="{{ fname }}">
-                </div>
-                {% endfor %}
-            </div>
         {% endif %}
+
     </main>
 </div>
 

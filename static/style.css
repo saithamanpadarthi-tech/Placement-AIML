@@ -133,7 +133,6 @@ body {
     position: sticky;
     top: 0;
 }
-
 .chart-grid {
     display: flex;
     flex-wrap: wrap;
