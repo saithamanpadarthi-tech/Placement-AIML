@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Linear Regression - Placement Prediction
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP BAR
+     ===================================================== -->
+
+<header class="topbar">
+
+    <h1>
+        Placement Prediction Project
+    </h1>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN LAYOUT
+     ===================================================== -->
+
+<div class="layout">
+
+
+    <!-- =================================================
+         SIDEBAR
+         ================================================= -->
+
+  <nav class="sidebar">
+
+    <div class="sidebar-title">
+        Modules
+    </div>
+
+
+    <ul>
+
+        <li>
+
+            <a
+                href="{{ url_for('data_loading') }}"
+                class="{% if request.path == '/data-loading' %}active{% endif %}"
+            >
+                Data Loading
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('eda') }}"
+                class="{% if request.path == '/eda' %}active{% endif %}"
+            >
+                EDA
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('preprocessing') }}"
+                class="{% if request.path == '/preprocessing' %}active{% endif %}"
+            >
+                Preprocessing
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('linear_regression') }}"
+                class="{% if request.path == '/linear-regression' %}active{% endif %}"
+            >
+                Linear Regression
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('logistic_regression') }}"
+                class="{% if request.path == '/logistic-regression' %}active{% endif %}"
+            >
+                Logistic Regression
+            </a>
+
+        </li>
+
+
+        <li class="tree-menu">
+
+            <details>
+
+                <summary>
+                    Tree Based Algorithm
+                </summary>
+
+
+                <ul class="tree-submenu">
+
+                    <li>
+                        <a href="/decision-tree">
+                            Decision Tree
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/random-forest">
+                            Random Forest
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/bagging">
+                            Bagging
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/boosting">
+                            Boosting
+                        </a>
+                    </li>
+
+                </ul>
+
+            </details>
+
+        </li>
+
+
+        <li>
+
+            <a class="disabled">
+
+                Prediction
+                <br>
+                (coming soon)
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+
+    <!-- =================================================
+         MAIN CONTENT
+         ================================================= -->
+
+    <main class="content">
+
+
+        <!-- =================================================
+             ERROR
+             ================================================= -->
+
+        {% if error %}
+
+        <div class="card">
+
+            <h2>
+                Error
+            </h2>
+
+            <div class="error">
+
+                {{ error }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             REGRESSION
+             ================================================= -->
+
+        {% if regression %}
+
+
+        <!-- HEADER -->
+
+        <div class="card">
+
+            <h2>
+                Linear Regression
+            </h2>
+
+            <p class="description">
+
+                Linear regression using
+                <strong>CGPA</strong>
+                to predict
+                <strong>Salary Package</strong>.
+
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             MODEL INFORMATION
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Model Information
+            </h2>
+
+
+            <div class="stats-grid">
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.feature }}
+                    </h3>
+
+                    <p>
+                        Feature
+                    </p>
+
+                </div>
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.target }}
+                    </h3>
+
+                    <p>
+                        Target
+                    </p>
+
+                </div>
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.train_rows }}
+                    </h3>
+
+                    <p>
+                        Training Rows
+                    </p>
+
+                </div>
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.validation_rows }}
+                    </h3>
+
+                    <p>
+                        Validation Rows
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             GRADIENT DESCENT SETTINGS
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Gradient Descent Settings
+            </h2>
+
+
+            <table class="summary-table">
+
+                <tr>
+
+                    <td>
+                        Learning Rate (α)
+                    </td>
+
+                    <td>
+                        {{ regression.alpha }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Iterations / Epochs
+                    </td>
+
+                    <td>
+                        {{ regression.epochs }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             STANDARDIZATION
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                CGPA Standardization
+            </h2>
+
+
+            <p class="description">
+
+                The training CGPA values are
+                standardized before applying
+                Batch Gradient Descent.
+
+            </p>
+
+
+            <table class="summary-table">
+
+                <tr>
+
+                    <td>
+                        Mean
+                    </td>
+
+                    <td>
+                        {{ regression.standardization.mean }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Standard Deviation
+                    </td>
+
+                    <td>
+                        {{ regression.standardization.std }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             GRADIENT DESCENT PARAMETERS
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Gradient Descent Parameters
+            </h2>
+
+
+            <table class="summary-table">
+
+
+                <tr>
+
+                    <td>
+                        θ₀ (Theta 0)
+                    </td>
+
+                    <td>
+                        {{ regression.gradient_descent.theta0 }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        θ₁ (Theta 1)
+                    </td>
+
+                    <td>
+                        {{ regression.gradient_descent.theta1 }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Original Intercept
+                    </td>
+
+                    <td>
+                        {{ regression.gradient_descent.original_intercept }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Original Slope
+                    </td>
+
+                    <td>
+                        {{ regression.gradient_descent.original_slope }}
+                    </td>
+
+                </tr>
+
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             GRADIENT DESCENT PERFORMANCE
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Gradient Descent Performance
+            </h2>
+
+
+            <div class="stats-grid">
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.gradient_descent.mse }}
+                    </h3>
+
+                    <p>
+                        Mean Squared Error (MSE)
+                    </p>
+
+                </div>
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.gradient_descent.rmse }}
+                    </h3>
+
+                    <p>
+                        Root Mean Squared Error (RMSE)
+                    </p>
+
+                </div>
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.gradient_descent.mae }}
+                    </h3>
+
+                    <p>
+                        Mean Absolute Error (MAE)
+                    </p>
+
+                </div>
+
+
+                <div class="stat-box">
+
+                    <h3>
+                        {{ regression.gradient_descent.r2 }}
+                    </h3>
+
+                    <p>
+                        R² Score
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             SCIKIT-LEARN
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Scikit-learn Linear Regression
+            </h2>
+
+
+            <table class="summary-table">
+
+
+                <tr>
+
+                    <td>
+                        Intercept
+                    </td>
+
+                    <td>
+                        {{ regression.sklearn.intercept }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Slope / Coefficient
+                    </td>
+
+                    <td>
+                        {{ regression.sklearn.slope }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        MSE
+                    </td>
+
+                    <td>
+                        {{ regression.sklearn.mse }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        RMSE
+                    </td>
+
+                    <td>
+                        {{ regression.sklearn.rmse }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        MAE
+                    </td>
+
+                    <td>
+                        {{ regression.sklearn.mae }}
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        R² Score
+                    </td>
+
+                    <td>
+                        {{ regression.sklearn.r2 }}
+                    </td>
+
+                </tr>
+
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             MODEL COMPARISON
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Model Comparison
+            </h2>
+
+
+            <div class="table-wrapper">
+
+                <table class="data-table">
+
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Metric
+                        </th>
+
+                        <th>
+                            Gradient Descent
+                        </th>
+
+                        <th>
+                            Scikit-learn
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    <tr>
+
+                        <td>
+                            MSE
+                        </td>
+
+                        <td>
+                            {{ regression.gradient_descent.mse }}
+                        </td>
+
+                        <td>
+                            {{ regression.sklearn.mse }}
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            RMSE
+                        </td>
+
+                        <td>
+                            {{ regression.gradient_descent.rmse }}
+                        </td>
+
+                        <td>
+                            {{ regression.sklearn.rmse }}
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            MAE
+                        </td>
+
+                        <td>
+                            {{ regression.gradient_descent.mae }}
+                        </td>
+
+                        <td>
+                            {{ regression.sklearn.mae }}
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            R² Score
+                        </td>
+
+                        <td>
+                            {{ regression.gradient_descent.r2 }}
+                        </td>
+
+                        <td>
+                            {{ regression.sklearn.r2 }}
+                        </td>
+
+                    </tr>
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ITERATION HISTORY
+             ================================================= -->
+
+        <div class="card">
+
+            <h2>
+                Gradient Descent Iteration History
+            </h2>
+
+
+            <p class="description">
+
+                Parameter updates and MSE for
+                each of the six gradient descent
+                iterations.
+
+            </p>
+
+
+            <div class="table-wrapper">
+
+                <table class="data-table">
+
+
+                    <thead>
+
+                    <tr>
+
+                        <th>
+                            Iteration
+                        </th>
+
+                        <th>
+                            θ₀
+                        </th>
+
+                        <th>
+                            θ₁
+                        </th>
+
+                        <th>
+                            MSE
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                    {% for item in regression.mse_history %}
+
+                    <tr>
+
+                        <td>
+                            {{ item.epoch }}
+                        </td>
+
+                        <td>
+                            {{ item.theta0 }}
+                        </td>
+
+                        <td>
+                            {{ item.theta1 }}
+                        </td>
+
+                        <td>
+                            {{ item.mse }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             CHARTS
+             ================================================= -->
+
+        {% if regression.charts %}
+
+        <div class="card">
+
+            <h2>
+                Regression Visualizations
+            </h2>
+
+
+            <div class="chart-grid">
+
+
+                {% for chart in regression.charts %}
+
+
+                <div class="chart-card">
+
+                    <h4>
+                        {{ chart.title }}
+                    </h4>
+
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='charts/' + chart.filename
+                        ) }}?v={{ regression.chart_version }}"
+                        alt="{{ chart.title }}"
+                    >
+
+                </div>
+
+
+                {% endfor %}
+
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        {% endif %}
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>
