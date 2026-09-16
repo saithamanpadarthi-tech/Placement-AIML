@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Preprocessing - Placement Prediction Project</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <h1>
+        Placement Prediction Project
+    </h1>
+
+</header>
+
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <nav class="sidebar">
+
+        <ul>
+
+            <li>
+
+                <a
+                    href="{{ url_for('data_loading') }}"
+                    class="menu-item {% if request.path == '/data-loading' %}active{% endif %}"
+                >
+                    Data Loading
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a
+                    href="{{ url_for('eda') }}"
+                    class="menu-item {% if request.path == '/eda' %}active{% endif %}"
+                >
+                    EDA
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a
+                    href="{{ url_for('preprocessing') }}"
+                    class="menu-item {% if request.path == '/preprocessing' %}active{% endif %}"
+                >
+                    Preprocessing
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a
+                    href="{{ url_for('linear_regression') }}"
+                    class="menu-item {% if request.path == '/linear-regression' %}active{% endif %}"
+                >
+                    Linear Regression
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a
+                    href="{{ url_for('logistic_regression') }}"
+                    class="menu-item {% if request.path == '/logistic-regression' %}active{% endif %}"
+                >
+                    Logistic Regression
+                </a>
+
+            </li>
+
+
+            <!-- TREE BASED ALGORITHM -->
+
+            <li class="tree-menu">
+
+                <details
+                    {% if request.path in [
+                        '/decision-tree',
+                        '/random-forest',
+                        '/bagging',
+                        '/boosting'
+                    ] %}
+                    open
+                    {% endif %}
+                >
+
+                    <summary>
+                        Tree Based Algorithm
+                    </summary>
+
+
+                    <ul class="tree-submenu">
+
+                        <li>
+                            <a
+                                href="/decision-tree"
+                                class="{% if request.path == '/decision-tree' %}active{% endif %}"
+                            >
+                                Decision Tree
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="/random-forest"
+                                class="{% if request.path == '/random-forest' %}active{% endif %}"
+                            >
+                                Random Forest
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="/bagging"
+                                class="{% if request.path == '/bagging' %}active{% endif %}"
+                            >
+                                Bagging
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="/boosting"
+                                class="{% if request.path == '/boosting' %}active{% endif %}"
+                            >
+                                Boosting
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </details>
+
+            </li>
+
+
+            <li>
+
+                <span class="menu-item disabled">
+                    Prediction
+                    (coming soon)
+                </span>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+    <main class="content">
+
+
+        <section class="card">
+
+            <h2>
+                Data Preprocessing
+            </h2>
+
+            <p>
+                Data cleaning, missing-value handling,
+                feature encoding, feature scaling and
+                train-test splitting.
+            </p>
+
+        </section>
+
+
+        {% if error %}
+
+        <div class="error">
+
+            {{ error }}
+
+        </div>
+
+        {% endif %}
+
+
+        {% if preprocessing %}
+
+
+        <section class="card">
+
+            <h2>
+                Dataset Information
+            </h2>
+
+            <table>
+
+                <tr>
+                    <th>Original Rows</th>
+                    <td>{{ preprocessing.original_rows }}</td>
+                </tr>
+
+                <tr>
+                    <th>Original Columns</th>
+                    <td>{{ preprocessing.original_columns }}</td>
+                </tr>
+
+                <tr>
+                    <th>Duplicate Rows Before Removal</th>
+                    <td>{{ preprocessing.duplicates_before }}</td>
+                </tr>
+
+                <tr>
+                    <th>Duplicate Rows After Removal</th>
+                    <td>{{ preprocessing.duplicates_after }}</td>
+                </tr>
+
+                <tr>
+                    <th>Missing Values Before Handling</th>
+                    <td>{{ preprocessing.missing_before }}</td>
+                </tr>
+
+                <tr>
+                    <th>Missing Values After Handling</th>
+                    <td>{{ preprocessing.missing_after }}</td>
+                </tr>
+
+            </table>
+
+        </section>
+
+
+        <section class="card">
+
+            <h2>
+                Features Used for Machine Learning
+            </h2>
+
+            <h3>
+                Numerical Features
+            </h3>
+
+            {% if preprocessing.numeric_features %}
+
+            <ul>
+
+                {% for feature in preprocessing.numeric_features %}
+
+                <li>
+                    {{ feature }}
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p>
+                No numerical features.
+            </p>
+
+            {% endif %}
+
+
+            <h3>
+                Categorical Features
+            </h3>
+
+            {% if preprocessing.categorical_features %}
+
+            <ul>
+
+                {% for feature in preprocessing.categorical_features %}
+
+                <li>
+                    {{ feature }}
+                </li>
+
+                {% endfor %}
+
+            </ul>
+
+            {% else %}
+
+            <p>
+                No categorical features.
+            </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <section class="card">
+
+            <h2>
+                Target Variable
+            </h2>
+
+            <table>
+
+                <tr>
+
+                    <th>
+                        Target
+                    </th>
+
+                    <td>
+                        {{ preprocessing.target }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </section>
+
+
+        <section class="card">
+
+            <h2>
+                Train-Test Split
+            </h2>
+
+            <table>
+
+                <tr>
+
+                    <th>
+                        Training Rows
+                    </th>
+
+                    <td>
+                        {{ preprocessing.training_rows }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <th>
+                        Testing Rows
+                    </th>
+
+                    <td>
+                        {{ preprocessing.testing_rows }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </section>
+
+
+        <section class="card">
+
+            <h2>
+                After Encoding and Scaling
+            </h2>
+
+            <table>
+
+                <tr>
+
+                    <th>
+                        Processed Training Rows
+                    </th>
+
+                    <td>
+                        {{ preprocessing.processed_training_rows }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <th>
+                        Processed Training Columns
+                    </th>
+
+                    <td>
+                        {{ preprocessing.processed_training_columns }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <th>
+                        Processed Testing Rows
+                    </th>
+
+                    <td>
+                        {{ preprocessing.processed_testing_rows }}
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <th>
+                        Processed Testing Columns
+                    </th>
+
+                    <td>
+                        {{ preprocessing.processed_testing_columns }}
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </section>
+
+
+        <div class="success">
+
+            ✓ Preprocessing completed successfully.
+
+        </div>
+
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
