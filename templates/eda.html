@@ -1,87 +1,788 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Placement Prediction Project</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>EDA - Placement Prediction Project</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #172b4d;
+        }
+
+        /* ==============================================
+           TOP BAR
+        ============================================== */
+
+        .topbar {
+            height: 86px;
+            background: #24466f;
+            color: white;
+
+            display: flex;
+            align-items: center;
+
+            padding-left: 28px;
+        }
+
+        .topbar h1 {
+            margin: 0;
+            font-size: 29px;
+        }
+
+
+        /* ==============================================
+           PAGE LAYOUT
+        ============================================== */
+
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 86px);
+        }
+
+
+        /* ==============================================
+           SIDEBAR
+        ============================================== */
+
+        .sidebar {
+            width: 202px;
+            flex-shrink: 0;
+
+            background: #2d5684;
+            color: white;
+
+            min-height: calc(100vh - 86px);
+        }
+
+        .sidebar-title {
+            padding: 28px 20px 20px;
+
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            display: block;
+
+            padding: 17px 20px;
+
+            color: white;
+            text-decoration: none;
+
+            font-size: 15px;
+        }
+
+        .sidebar a:hover {
+            background: #3f73aa;
+        }
+
+        .sidebar a.active {
+            background: #4a82bc;
+            font-weight: bold;
+
+            border-left: 4px solid white;
+            padding-left: 16px;
+        }
+
+        .disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+
+        /* ==============================================
+           MAIN CONTENT
+        ============================================== */
+
+        .content {
+            flex: 1;
+
+            padding: 55px 66px;
+
+            min-width: 0;
+        }
+
+        .content h2 {
+            margin-top: 0;
+
+            font-size: 32px;
+
+            color: #132f50;
+        }
+
+        .description {
+            font-size: 16px;
+
+            margin-bottom: 25px;
+
+            color: #34495e;
+        }
+
+
+        /* ==============================================
+           ERROR
+        ============================================== */
+
+        .error {
+            background: #ffecec;
+
+            border: 1px solid #e5a1a1;
+
+            color: #b42323;
+
+            padding: 15px;
+
+            border-radius: 7px;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* ==============================================
+           CARDS
+        ============================================== */
+
+        .card {
+            background: white;
+
+            border: 1px solid #d8dee6;
+
+            border-radius: 8px;
+
+            padding: 22px;
+
+            margin-bottom: 24px;
+
+            box-shadow:
+                0 2px 5px rgba(0, 0, 0, 0.04);
+        }
+
+        .card h3 {
+            margin-top: 0;
+
+            margin-bottom: 15px;
+
+            font-size: 20px;
+
+            color: #183b60;
+        }
+
+
+        /* ==============================================
+           SUMMARY TABLE
+        ============================================== */
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 14px;
+        }
+
+        th {
+            background: #e8edf3;
+
+            text-align: left;
+
+            font-weight: bold;
+        }
+
+        th,
+        td {
+            border: 1px solid #d5dce4;
+
+            padding: 10px;
+        }
+
+        tr:nth-child(even) td {
+            background: #fafbfc;
+        }
+
+
+        /* ==============================================
+           CHART GRID
+        ============================================== */
+
+        .chart-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 22px;
+
+        }
+
+
+        /* ==============================================
+           INDIVIDUAL CHART
+        ============================================== */
+
+        .chart-card {
+
+            background: white;
+
+            border: 1px solid #d8dee6;
+
+            border-radius: 8px;
+
+            padding: 12px;
+
+            box-shadow:
+                0 2px 5px rgba(0, 0, 0, 0.05);
+
+            overflow: hidden;
+        }
+
+        .chart-card h4 {
+
+            margin: 3px 0 10px;
+
+            font-size: 14px;
+
+            text-align: center;
+
+            color: #183b60;
+
+            min-height: 32px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .chart-card img {
+
+            width: 100%;
+
+            height: auto;
+
+            display: block;
+
+            border-radius: 4px;
+        }
+
+
+        /* ==============================================
+           LARGE HEATMAP CARDS
+        ============================================== */
+
+        .chart-card.large {
+
+            grid-column:
+                span 4;
+        }
+
+        .chart-card.large img {
+
+            max-height: 650px;
+
+            object-fit: contain;
+
+        }
+
+
+        /* ==============================================
+           MEDIUM CHART
+        ============================================== */
+
+        .chart-card.medium {
+
+            grid-column:
+                span 2;
+        }
+
+
+        /* ==============================================
+           RESPONSIVE
+        ============================================== */
+
+        @media (max-width: 1200px) {
+
+            .content {
+                padding: 40px 35px;
+            }
+
+            .chart-grid {
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+            }
+
+            .chart-card.large {
+                grid-column: span 3;
+            }
+
+            .chart-card.medium {
+                grid-column: span 2;
+            }
+
+        }
+
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                width: 150px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .chart-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .chart-card.large,
+            .chart-card.medium {
+                grid-column: span 2;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+            }
+
+            .sidebar a {
+                display: inline-block;
+            }
+
+            .chart-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .chart-card.large,
+            .chart-card.medium {
+                grid-column: span 1;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
 
-<header class="topbar">
-    <h1>Placement Prediction Project</h1>
-</header>
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<div class="topbar">
+
+    <h1>
+        Placement Prediction Project
+    </h1>
+
+</div>
+
 
 <div class="layout">
-    <!-- Left panel -->
-    <nav class="sidebar">
-        <ul>
-            <li>
-                <a href="{{ url_for('data_loading') }}"
-                   class="menu-item {% if active == 'data-loading' %}active{% endif %}">
-                    Data Loading
-                </a>
-            </li>
-            <li>
-                <a href="{{ url_for('eda_page') }}"
-                   class="menu-item {% if active == 'eda' %}active{% endif %}">
-                    EDA
-                </a>
-            </li>
-            <li class="menu-item disabled">Preprocessing (coming soon)</li>
-            <li class="menu-item disabled">Model Training (coming soon)</li>
-            <li class="menu-item disabled">Prediction (coming soon)</li>
-        </ul>
-    </nav>
 
-    <!-- Main content -->
-    <main class="content">
-        <h2>Exploratory Data Analysis</h2>
 
-        {% if error %}
-            <div class="error">{{ error }}</div>
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<nav class="sidebar">
+
+    <div class="sidebar-title">
+        Modules
+    </div>
+
+
+    <ul>
+
+        <li>
+
+            <a
+                href="{{ url_for('data_loading') }}"
+                class="{% if request.path == '/data-loading' %}active{% endif %}"
+            >
+                Data Loading
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('eda') }}"
+                class="{% if request.path == '/eda' %}active{% endif %}"
+            >
+                EDA
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('preprocessing') }}"
+                class="{% if request.path == '/preprocessing' %}active{% endif %}"
+            >
+                Preprocessing
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('linear_regression') }}"
+                class="{% if request.path == '/linear-regression' %}active{% endif %}"
+            >
+                Linear Regression
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="{{ url_for('logistic_regression') }}"
+                class="{% if request.path == '/logistic-regression' %}active{% endif %}"
+            >
+                Logistic Regression
+            </a>
+
+        </li>
+
+
+        <li class="tree-menu">
+
+            <details>
+
+                <summary>
+                    Tree Based Algorithm
+                </summary>
+
+
+                <ul class="tree-submenu">
+
+                    <li>
+                        <a href="/decision-tree">
+                            Decision Tree
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/random-forest">
+                            Random Forest
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/bagging">
+                            Bagging
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/boosting">
+                            Boosting
+                        </a>
+                    </li>
+
+                </ul>
+
+            </details>
+
+        </li>
+
+
+        <li>
+
+            <a class="disabled">
+                Prediction
+                <br>
+                (coming soon)
+            </a>
+
+        </li>
+
+    </ul>
+
+</nav>
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<main class="content">
+
+    <h2>
+        Exploratory Data Analysis
+    </h2>
+
+    <p class="description">
+        Explore the dataset using statistical summaries
+        and effective visualizations.
+    </p>
+
+
+    <!-- =================================================
+         ERROR
+    ================================================= -->
+
+    {% if error %}
+
+    <div class="error">
+
+        {{ error }}
+
+    </div>
+
+    {% endif %}
+
+
+    {% if eda %}
+
+
+    <!-- =================================================
+         DATASET SUMMARY
+    ================================================= -->
+
+    <div class="card">
+
+        <h3>
+            Dataset Summary
+        </h3>
+
+        <table>
+
+            <tr>
+                <th>Rows</th>
+                <td>{{ eda.rows }}</td>
+            </tr>
+
+            <tr>
+                <th>Columns</th>
+                <td>{{ eda.columns }}</td>
+            </tr>
+
+            <tr>
+                <th>Duplicate Rows</th>
+                <td>{{ eda.duplicate_rows }}</td>
+            </tr>
+
+        </table>
+
+    </div>
+
+
+    <!-- =================================================
+         MISSING VALUES
+    ================================================= -->
+
+    <div class="card">
+
+        <h3>
+            Missing Values
+        </h3>
+
+        {% if eda.missing_values %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Column
+                    </th>
+
+                    <th>
+                        Missing Count
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in eda.missing_values %}
+
+                <tr>
+
+                    <td>
+                        {{ item.column }}
+                    </td>
+
+                    <td>
+                        {{ item.count }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <p>
+            No missing values found.
+        </p>
+
         {% endif %}
 
-        {% if results %}
-            <table class="summary-table">
-                <tr><td>Rows</td><td>{{ results.n_rows }}</td></tr>
-                <tr><td>Columns</td><td>{{ results.n_cols }}</td></tr>
-                <tr><td>Duplicate rows</td><td>{{ results.duplicate_count }}</td></tr>
-            </table>
+    </div>
 
-            {% if results.missing %}
-                <h3>Missing Values</h3>
-                <div class="table-wrapper">
-                    <table class="data-table">
-                        <thead>
-                            <tr><th>Column</th><th>Missing Count</th></tr>
-                        </thead>
-                        <tbody>
-                        {% for col, count in results.missing.items() %}
-                            <tr><td>{{ col }}</td><td>{{ count }}</td></tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            {% endif %}
 
-            <h3>Placement Status Counts</h3>
-            <table class="summary-table">
-                {% for status, count in results.target_counts.items() %}
-                <tr><td>{{ status }}</td><td>{{ count }}</td></tr>
+    <!-- =================================================
+         PLACEMENT STATUS
+    ================================================= -->
+
+    <div class="card">
+
+        <h3>
+            Placement Status Counts
+        </h3>
+
+        {% if eda.placement_counts %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Placement Status
+                    </th>
+
+                    <th>
+                        Count
+                    </th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for status, count
+                   in eda.placement_counts.items() %}
+
+                <tr>
+
+                    <td>
+                        {{ status }}
+                    </td>
+
+                    <td>
+                        {{ count }}
+                    </td>
+
+                </tr>
+
                 {% endfor %}
-            </table>
 
-            <h3>Charts</h3>
-            <div class="chart-grid">
-                {% for fname in results.charts %}
-                <div class="chart-card">
-                    <img src="{{ url_for('static', filename='charts/' + fname) }}" alt="{{ fname }}">
-                </div>
-                {% endfor %}
+            </tbody>
+
+        </table>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         CHARTS
+    ================================================= -->
+
+    <div class="card">
+
+        <h3>
+            EDA Visualizations
+        </h3>
+
+        <div class="chart-grid">
+
+            {% for chart in eda.charts %}
+
+            <div class="chart-card
+
+                {% if 'Heatmap' in chart.title %}
+                    large
+                {% elif 'Missing Values' in chart.title %}
+                    medium
+                {% elif 'Salary Package' in chart.title %}
+                    medium
+                {% elif 'vs Salary' in chart.title %}
+                    medium
+                {% elif 'vs Placement' in chart.title %}
+                    medium
+                {% endif %}
+
+            ">
+
+                <h4>
+                    {{ chart.title }}
+                </h4>
+
+                <img
+                    src="{{ url_for(
+                        'static',
+                        filename='charts/' + chart.filename
+                    ) }}"
+                    alt="{{ chart.title }}"
+                >
+
             </div>
-        {% endif %}
-    </main>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    {% endif %}
+
+</main>
+
 </div>
 
 </body>
+
 </html>

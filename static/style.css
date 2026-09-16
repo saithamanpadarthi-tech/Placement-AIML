@@ -1,153 +1,673 @@
+/* =====================================================
+   GENERAL
+===================================================== */
+
 * {
     box-sizing: border-box;
 }
 
+html,
 body {
     margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background-color: #f4f6f8;
-    color: #222;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #17212b;
 }
 
+
+/* =====================================================
+   TOP BAR
+===================================================== */
+
 .topbar {
-    background-color: #1f3a5f;
+    height: 78px;
+
+    background: #24466f;
     color: white;
-    padding: 18px 24px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 30px;
 }
 
 .topbar h1 {
     margin: 0;
-    font-size: 22px;
+
+    font-size: 28px;
+    font-weight: 700;
 }
+
+
+/* =====================================================
+   MAIN LAYOUT
+===================================================== */
 
 .layout {
     display: flex;
-    min-height: calc(100vh - 60px);
+
+    min-height: calc(100vh - 78px);
 }
 
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
 .sidebar {
-    width: 240px;
-    background-color: #26466f;
-    padding-top: 10px;
+    width: 210px;
+
+    flex-shrink: 0;
+
+    background: #2d527d;
+
+    min-height: calc(100vh - 78px);
+
+    overflow-y: auto;
 }
+
+
+/* Sidebar heading */
+
+.sidebar h3 {
+    margin: 0;
+
+    padding: 28px 20px 18px;
+
+    color: white;
+
+    font-size: 17px;
+}
+
+
+/* =====================================================
+   SIDEBAR LIST
+===================================================== */
 
 .sidebar ul {
     list-style: none;
+
     margin: 0;
     padding: 0;
 }
 
-.menu-item {
+.sidebar li {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =====================================================
+   NORMAL SIDEBAR LINKS
+===================================================== */
+
+.sidebar a,
+.sidebar .menu-item {
     display: block;
-    color: #e5ecf5;
-    padding: 14px 20px;
-    cursor: pointer;
-    border-left: 4px solid transparent;
+
+    width: 100%;
+
+    padding: 18px 20px;
+
+    color: white;
+
     text-decoration: none;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+
+    cursor: pointer;
 }
 
-.menu-item:hover:not(.disabled) {
-    background-color: #33578a;
+
+/* Hover */
+
+.sidebar a:hover,
+.sidebar .menu-item:hover {
+    background: #3e70a8;
 }
 
-.menu-item.active {
-    background-color: #3d6aa3;
-    border-left: 4px solid #ffffff;
+
+/* Active */
+
+.sidebar a.active,
+.sidebar .menu-item.active {
+    background: #477db8;
+
     font-weight: bold;
+
+    border-left: 4px solid white;
+
+    padding-left: 16px;
 }
 
-.menu-item.disabled {
-    color: #8ba0bd;
-    cursor: not-allowed;
+
+/* Disabled */
+
+.sidebar a.disabled,
+.sidebar .menu-item.disabled {
+    color: #9db4ce;
+
+    cursor: default;
 }
+
+.sidebar a.disabled:hover,
+.sidebar .menu-item.disabled:hover {
+    background: transparent;
+}
+
+
+/* =====================================================
+   TREE BASED ALGORITHM DROPDOWN
+===================================================== */
+
+.tree-menu {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Details */
+
+.tree-menu details {
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =====================================================
+   DROPDOWN TITLE
+===================================================== */
+
+.tree-menu summary {
+    list-style: none;
+
+    display: block;
+
+    width: 100%;
+
+    padding: 18px 20px;
+
+    color: white;
+
+    font-size: 15px;
+
+    line-height: 1.5;
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+
+/* Remove browser arrow */
+
+.tree-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.tree-menu summary::marker {
+    display: none;
+}
+
+
+/* =====================================================
+   DROPDOWN ARROW
+===================================================== */
+
+.tree-menu summary::after {
+    content: "▼";
+
+    float: right;
+
+    font-size: 11px;
+
+    margin-top: 3px;
+
+    transition: transform 0.2s ease;
+}
+
+
+/* Closed = sideways arrow */
+
+.tree-menu details:not([open]) summary::after {
+    transform: rotate(-90deg);
+}
+
+
+/* Open */
+
+.tree-menu details[open] summary {
+    background: #2d527d;
+}
+
+
+/* Hover */
+
+.tree-menu summary:hover {
+    background: #3e70a8;
+}
+
+
+/* =====================================================
+   TREE SUBMENU
+===================================================== */
+
+.tree-submenu {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+
+    background: #24466f;
+}
+
+
+/* Submenu item */
+
+.tree-submenu li {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Submenu links */
+
+.tree-submenu a {
+    display: block;
+
+    width: 100%;
+
+    padding: 13px 20px 13px 35px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* Submenu hover */
+
+.tree-submenu a:hover {
+    background: #3f73aa;
+}
+
+
+/* Submenu active */
+
+.tree-submenu a.active {
+    background: #4a82bc;
+
+    font-weight: bold;
+
+    border-left: 4px solid white;
+
+    padding-left: 31px;
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
 
 .content {
     flex: 1;
-    padding: 24px 32px;
+
+    min-width: 0;
+
+    padding: 35px 40px;
 }
 
-.hidden {
-    display: none !important;
+
+.content > h2 {
+    margin-top: 0;
+
+    margin-bottom: 25px;
+
+    font-size: 28px;
+
+    color: #173a61;
 }
 
-#load-data-btn {
-    background-color: #1f3a5f;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+
+/* =====================================================
+   CARDS
+===================================================== */
+
+.card {
+    background: white;
+
+    border: 1px solid #d8dee5;
+
+    border-radius: 7px;
+
+    padding: 24px;
+
+    margin-bottom: 25px;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-#load-data-btn:hover {
-    background-color: #26466f;
+
+.card h2 {
+    margin-top: 0;
+
+    color: #173a61;
 }
 
-#loading-spinner {
-    margin-top: 10px;
-    color: #555;
+
+.card h3 {
+    color: #173a61;
+
+    margin-top: 20px;
 }
 
-.error {
-    margin-top: 12px;
-    color: #b00020;
-    background: #fdecea;
-    padding: 10px 14px;
-    border-radius: 4px;
+
+/* =====================================================
+   RESULT CARD
+===================================================== */
+
+.result-card {
+    background: white;
+
+    border: 1px solid #d8dee5;
+
+    border-radius: 7px;
+
+    padding: 24px;
+
+    margin-top: 20px;
+
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.summary-table {
-    margin-top: 10px;
+
+.result-card h3 {
+    color: #173a61;
+}
+
+
+/* =====================================================
+   TABLES
+===================================================== */
+
+table {
     border-collapse: collapse;
+
+    width: 100%;
+
+    background: white;
 }
 
-.summary-table td {
-    padding: 6px 12px;
-    border: 1px solid #ccc;
+
+th,
+td {
+    border: 1px solid #d2d8de;
+
+    padding: 12px 14px;
+
+    text-align: left;
+
+    font-size: 15px;
 }
+
+
+th {
+    background: #edf1f5;
+
+    font-weight: 700;
+}
+
+
+tr:hover td {
+    background: #f8fafc;
+}
+
+
+/* =====================================================
+   TABLE WRAPPER
+===================================================== */
 
 .table-wrapper {
-    overflow-x: auto;
-    margin-top: 10px;
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-}
-
-.data-table {
-    border-collapse: collapse;
     width: 100%;
-    font-size: 13px;
+
+    overflow-x: auto;
+
+    margin-bottom: 25px;
 }
 
-.data-table th, .data-table td {
-    border: 1px solid #ddd;
-    padding: 6px 10px;
-    text-align: left;
-    white-space: nowrap;
+
+/* =====================================================
+   SUMMARY TABLE
+===================================================== */
+
+.summary-table {
+    width: 100%;
+
+    margin-bottom: 25px;
 }
 
-.data-table th {
-    background-color: #eaeff5;
-    position: sticky;
-    top: 0;
+
+/* =====================================================
+   CHART GRID
+===================================================== */
+
+.charts-grid {
+    display: grid;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(400px, 1fr)
+    );
+
+    gap: 25px;
+
+    width: 100%;
 }
-.chart-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-top: 10px;
-}
+
+
+/* =====================================================
+   CHART CARD
+===================================================== */
 
 .chart-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 8px;
+    border: 1px solid #d8dee5;
+
+    background: #ffffff;
+
+    border-radius: 6px;
+
+    padding: 18px;
 }
 
+
+.chart-card h4 {
+    margin-top: 0;
+
+    margin-bottom: 15px;
+
+    color: #173a61;
+
+    font-size: 18px;
+}
+
+
 .chart-card img {
-    max-width: 400px;
     display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    max-width: 100%;
+}
+
+
+/* =====================================================
+   ERROR
+===================================================== */
+
+.error {
+    background: #fff0f0;
+
+    border: 1px solid #e3a3a3;
+
+    color: #b42318;
+
+    padding: 15px 18px;
+
+    border-radius: 6px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =====================================================
+   SUCCESS
+===================================================== */
+
+.success {
+    background: #eefaf0;
+
+    border: 1px solid #a9d6b0;
+
+    color: #207227;
+
+    padding: 15px 18px;
+
+    border-radius: 6px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =====================================================
+   LISTS
+===================================================== */
+
+.content ul {
+    margin-top: 10px;
+
+    padding-left: 25px;
+}
+
+
+.content li {
+    margin-bottom: 7px;
+}
+
+
+/* =====================================================
+   PAGE CONTAINER
+   Used by older model pages
+===================================================== */
+
+.page-container {
+    padding: 35px 40px;
+}
+
+
+.page-container h2 {
+    margin-top: 0;
+
+    color: #173a61;
+
+    font-size: 28px;
+}
+
+
+/* =====================================================
+   HORIZONTAL RULE
+===================================================== */
+
+hr {
+    border: 0;
+
+    border-top: 1px solid #d8dee5;
+
+    margin: 25px 0;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .sidebar {
+        width: 180px;
+    }
+
+    .content {
+        padding: 25px;
+    }
+
+    .page-container {
+        padding: 25px;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .topbar {
+        height: 65px;
+
+        padding: 0 18px;
+    }
+
+    .topbar h1 {
+        font-size: 21px;
+    }
+
+    .layout {
+        min-height: calc(100vh - 65px);
+    }
+
+    .sidebar {
+        width: 165px;
+
+        min-height: calc(100vh - 65px);
+    }
+
+    .sidebar a,
+    .sidebar .menu-item,
+    .tree-menu summary {
+        padding: 15px 12px;
+
+        font-size: 14px;
+    }
+
+    .tree-submenu a {
+        padding: 12px 10px 12px 25px;
+
+        font-size: 13px;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .page-container {
+        padding: 20px;
+    }
 }

@@ -2,63 +2,90 @@ import os
 import pandas as pd
 
 
-import os
-import pandas as pd
+# =========================================================
+# DATASET PATH
+# =========================================================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DATASET_PATH = os.path.join(
+    BASE_DIR,
+    r"C:\Users\Thaman\PycharmProjects\PythonProject4\placement_predict_50k Dataset (3).csv"
+)
 
 
-DATA_PATH = r"C:\Users\Thaman\PycharmProjects\PythonProject4\placement_predict_50k Dataset (3).csv"
+# =========================================================
+# LOAD DATASET
+# =========================================================
 
+def load_data():
 
+    if not os.path.exists(DATASET_PATH):
+        raise FileNotFoundError(
+            f"Dataset not found:\n{DATASET_PATH}"
+        )
 
-def load_data(path: str = DATA_PATH) -> pd.DataFrame:
-    if not os.path.exists(path):
-        raise FileNotFoundError("File does not exist.")
+    df = pd.read_csv(DATASET_PATH)
 
-    df = pd.read_csv(path)
     return df
 
 
+# =========================================================
+# DATASET SUMMARY
+# =========================================================
 
-def get_data_summary(path:str=DATA_PATH) -> dict:
-    df=load_data(path)
-    summary = {
-        "n_rows": df.shape[0],
-        "n_cols": df.shape[1],
-        "columns": list(df.columns),
-        "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()},
-        "missing_counts": {col:int(df[col].isna().sum())for col in df.columns},
-        "preview": df.head(10).to_dict(orient="records"),
-    }
-    return summary
+def get_data_summary():
 
-
-if __name__ == "main":
     df = load_data()
-    print(get_data_summary(df))
 
+    # Convert NaN values to safe values for Jinja
+    missing_counts = (
+        df.isnull()
+        .sum()
+        .to_dict()
+    )
 
-def load_data(path: str = DATA_PATH) -> pd.DataFrame:
-    if not os.path.exists(path):
-        raise FileNotFoundError("File does not exist.")
-
-    df = pd.read_csv(path)
-    return df
-
-
-
-def get_data_summary(path:str=DATA_PATH) -> dict:
-    df=load_data(path)
-    summary = {
-        "n_rows": df.shape[0],
-        "n_cols": df.shape[1],
-        "columns": list(df.columns),
-        "dtypes": {col: str(dtype) for col, dtype in df.dtypes.items()},
-        "missing_counts": {col:int(df[col].isna().sum())for col in df.columns},
-        "preview": df.head(10).to_dict(orient="records"),
+    dtypes = {
+        column: str(df[column].dtype)
+        for column in df.columns
     }
-    return summary
+
+    preview = (
+        df.head(10)
+        .fillna("")
+        .to_dict(orient="records")
+    )
+
+    return {
+        "n_rows": int(df.shape[0]),
+
+        "n_cols": int(df.shape[1]),
+
+        "columns": df.columns.tolist(),
+
+        "dtypes": dtypes,
+
+        "missing_counts": missing_counts,
+
+        "preview": preview
+    }
 
 
-if __name__ == "main":
+# =========================================================
+# TEST
+# =========================================================
+
+if __name__ == "__main__":
+
     df = load_data()
-    print(get_data_summary(df))
+
+    print("=" * 60)
+    print("DATASET LOADED SUCCESSFULLY")
+    print("=" * 60)
+
+    print("Rows:", df.shape[0])
+    print("Columns:", df.shape[1])
+
+    print("\nColumns:")
+    for column in df.columns:
+        print("-", column)

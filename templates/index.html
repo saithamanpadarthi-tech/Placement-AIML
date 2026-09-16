@@ -1,103 +1,415 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Placement Prediction Project</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Placement Prediction Project</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
 </head>
+
 <body>
 
 <header class="topbar">
-    <h1>Placement Prediction Project</h1>
+
+    <h1>
+        Placement Prediction Project
+    </h1>
+
 </header>
 
+
 <div class="layout">
-    <!-- Left panel -->
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     <nav class="sidebar">
+
         <ul>
+
+
+            <!-- DATA LOADING -->
+
             <li>
-                <a href="{{ url_for('data_loading') }}"
-                   class="menu-item {% if active == 'data-loading' %}active{% endif %}">
+
+                <a
+                    href="{{ url_for('data_loading') }}"
+                    class="menu-item {% if request.path == '/data-loading' %}active{% endif %}"
+                >
                     Data Loading
                 </a>
+
             </li>
-             <li>
-                <a href="{{ url_for('eda_page') }}"
-                   class="menu-item {% if active == 'eda' %}active{% endif %}">
+
+
+            <!-- EDA -->
+
+            <li>
+
+                <a
+                    href="{{ url_for('eda') }}"
+                    class="menu-item {% if request.path == '/eda' %}active{% endif %}"
+                >
                     EDA
                 </a>
+
             </li>
 
-            <li class="menu-item disabled">Preprocessing (coming soon)</li>
-            <li class="menu-item disabled">Model Training (coming soon)</li>
-            <li class="menu-item disabled">Prediction (coming soon)</li>
+
+            <!-- PREPROCESSING -->
+
+            <li>
+
+                <a
+                    href="{{ url_for('preprocessing') }}"
+                    class="menu-item {% if request.path == '/preprocessing' %}active{% endif %}"
+                >
+                    Preprocessing
+                </a>
+
+            </li>
+
+
+            <!-- LINEAR REGRESSION -->
+
+            <li>
+
+                <a
+                    href="{{ url_for('linear_regression') }}"
+                    class="menu-item {% if request.path == '/linear-regression' %}active{% endif %}"
+                >
+                    Linear Regression
+                </a>
+
+            </li>
+
+
+            <!-- LOGISTIC REGRESSION -->
+
+            <li>
+
+                <a
+                    href="{{ url_for('logistic_regression') }}"
+                    class="menu-item {% if request.path == '/logistic-regression' %}active{% endif %}"
+                >
+                    Logistic Regression
+                </a>
+
+            </li>
+
+
+            <!-- TREE BASED ALGORITHM -->
+
+            <li class="tree-menu">
+
+                <details
+                    {% if request.path in [
+                        '/decision-tree',
+                        '/random-forest',
+                        '/bagging',
+                        '/boosting'
+                    ] %}
+                    open
+                    {% endif %}
+                >
+
+                    <summary>
+                        Tree Based Algorithm
+                    </summary>
+
+
+                    <ul class="tree-submenu">
+
+
+                        <li>
+
+                            <a
+                                href="/decision-tree"
+                                class="{% if request.path == '/decision-tree' %}active{% endif %}"
+                            >
+                                Decision Tree
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="/random-forest"
+                                class="{% if request.path == '/random-forest' %}active{% endif %}"
+                            >
+                                Random Forest
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="/bagging"
+                                class="{% if request.path == '/bagging' %}active{% endif %}"
+                            >
+                                Bagging
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="/boosting"
+                                class="{% if request.path == '/boosting' %}active{% endif %}"
+                            >
+                                Boosting
+                            </a>
+
+                        </li>
+
+
+                    </ul>
+
+                </details>
+
+            </li>
+
+
+            <!-- PREDICTION -->
+
+            <li>
+
+                <span class="menu-item disabled">
+
+                    Prediction
+                    (coming soon)
+
+                </span>
+
+            </li>
+
+
         </ul>
+
     </nav>
 
-    <!-- Main content -->
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
     <main class="content">
 
-        {% if active == 'none' %}
-            <p>Select an option from the left panel to get started.</p>
+
+        {% if active == "none" %}
+
+            <h2>
+                Welcome
+            </h2>
+
+            <p>
+                Select a module from the left panel
+                to get started.
+            </p>
+
         {% endif %}
 
-        {% if active == 'data-loading' %}
-            <h2>Data Loading</h2>
 
-            {% if error %}
-                <div class="error">{{ error }}</div>
-            {% endif %}
+        {% if error %}
+
+            <div class="error">
+
+                {{ error }}
+
+            </div>
+
+        {% endif %}
+
+
+        {% if active == "data-loading" %}
+
+            <h2>
+                Data Loading
+            </h2>
+
 
             {% if summary %}
+
+                <h3>
+                    Dataset Information
+                </h3>
+
+
                 <table class="summary-table">
-                    <tr><td>Rows</td><td>{{ summary.n_rows }}</td></tr>
-                    <tr><td>Columns</td><td>{{ summary.n_cols }}</td></tr>
+
+                    <tr>
+
+                        <td>
+                            Rows
+                        </td>
+
+                        <td>
+                            {{ summary.n_rows }}
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Columns
+                        </td>
+
+                        <td>
+                            {{ summary.n_cols }}
+                        </td>
+
+                    </tr>
+
                 </table>
 
-                <h3>Column Info</h3>
+
+                <h3>
+                    Column Information
+                </h3>
+
+
                 <div class="table-wrapper">
+
                     <table class="data-table">
+
                         <thead>
-                            <tr><th>Column</th><th>Dtype</th><th>Missing Values</th></tr>
-                        </thead>
-                        <tbody>
-                        {% for col in summary.columns %}
+
                             <tr>
-                                <td>{{ col }}</td>
-                                <td>{{ summary.dtypes[col] }}</td>
-                                <td>{{ summary.missing_counts[col] }}</td>
+
+                                <th>
+                                    Column
+                                </th>
+
+                                <th>
+                                    Data Type
+                                </th>
+
+                                <th>
+                                    Missing Values
+                                </th>
+
                             </tr>
-                        {% endfor %}
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for column in summary.columns %}
+
+                            <tr>
+
+                                <td>
+                                    {{ column }}
+                                </td>
+
+                                <td>
+                                    {{ summary.dtypes[column] }}
+                                </td>
+
+                                <td>
+                                    {{ summary.missing_counts[column] }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
                         </tbody>
+
                     </table>
+
                 </div>
 
-                <h3>Preview (first 10 rows)</h3>
+
+                <h3>
+                    Dataset Preview
+                </h3>
+
+
                 <div class="table-wrapper">
+
                     <table class="data-table">
+
                         <thead>
+
                             <tr>
-                            {% for col in summary.columns %}
-                                <th>{{ col }}</th>
-                            {% endfor %}
+
+                                {% for column in summary.columns %}
+
+                                <th>
+                                    {{ column }}
+                                </th>
+
+                                {% endfor %}
+
                             </tr>
+
                         </thead>
+
+
                         <tbody>
-                        {% for row in summary.preview %}
+
+                            {% for row in summary.preview %}
+
                             <tr>
-                            {% for col in summary.columns %}
-                                <td>{{ row[col] }}</td>
-                            {% endfor %}
+
+                                {% for column in summary.columns %}
+
+                                <td>
+                                    {{ row[column] }}
+                                </td>
+
+                                {% endfor %}
+
                             </tr>
-                        {% endfor %}
+
+                            {% endfor %}
+
                         </tbody>
+
                     </table>
+
                 </div>
+
+
+            {% else %}
+
+                <p>
+                    Dataset could not be loaded.
+                </p>
+
             {% endif %}
+
+
         {% endif %}
 
+
     </main>
+
 </div>
 
 </body>
+
 </html>
