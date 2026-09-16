@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Random Forest</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<header class="topbar">
+
+    <h1>
+        Placement Prediction Project
+    </h1>
+
+</header>
+
+
+<div class="layout">
+
+
+    <!-- SIDEBAR -->
+
+    <nav class="sidebar">
+
+        <ul>
+
+            <li>
+                <a
+                    href="{{ url_for('data_loading') }}"
+                    class="menu-item {% if request.path == '/data-loading' %}active{% endif %}"
+                >
+                    Data Loading
+                </a>
+            </li>
+
+
+            <li>
+                <a
+                    href="{{ url_for('eda') }}"
+                    class="menu-item {% if request.path == '/eda' %}active{% endif %}"
+                >
+                    EDA
+                </a>
+            </li>
+
+
+            <li>
+                <a
+                    href="{{ url_for('preprocessing') }}"
+                    class="menu-item {% if request.path == '/preprocessing' %}active{% endif %}"
+                >
+                    Preprocessing
+                </a>
+            </li>
+
+
+            <li>
+                <a
+                    href="{{ url_for('linear_regression') }}"
+                    class="menu-item {% if request.path == '/linear-regression' %}active{% endif %}"
+                >
+                    Linear Regression
+                </a>
+            </li>
+
+
+            <li>
+                <a
+                    href="{{ url_for('logistic_regression') }}"
+                    class="menu-item {% if request.path == '/logistic-regression' %}active{% endif %}"
+                >
+                    Logistic Regression
+                </a>
+            </li>
+
+
+            <li class="tree-menu">
+
+                <details open>
+
+                    <summary>
+                        Tree Based Algorithm
+                    </summary>
+
+                    <ul class="tree-submenu">
+
+                        <li>
+                            <a href="/decision-tree">
+                                Decision Tree
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="/random-forest"
+                                class="active"
+                            >
+                                Random Forest
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/bagging">
+                                Bagging
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/boosting">
+                                Boosting
+                            </a>
+                        </li>
+
+                    </ul>
+
+                </details>
+
+            </li>
+
+
+            <li>
+                <span class="menu-item disabled">
+                    Prediction
+                    (coming soon)
+                </span>
+            </li>
+
+        </ul>
+
+    </nav>
+
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+        <h2>
+            Random Forest Classifier
+        </h2>
+
+        <p>
+            Random Forest combines multiple decision trees
+            to improve prediction performance and stability.
+        </p>
+
+
+        {% if error %}
+
+            <div class="error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        {% if result %}
+
+            <div class="result-card">
+
+                <h3>
+                    {{ result.model }}
+                </h3>
+
+                <p>
+                    Training Samples:
+                    <strong>
+                        {{ result.training_samples }}
+                    </strong>
+                </p>
+
+                <p>
+                    Testing Samples:
+                    <strong>
+                        {{ result.testing_samples }}
+                    </strong>
+                </p>
+
+                <hr>
+
+                <h3>
+                    Model Evaluation
+                </h3>
+
+                <p>
+                    Accuracy:
+                    <strong>
+                        {{ result.accuracy }}%
+                    </strong>
+                </p>
+
+                <p>
+                    Precision:
+                    <strong>
+                        {{ result.precision }}%
+                    </strong>
+                </p>
+
+                <p>
+                    Recall:
+                    <strong>
+                        {{ result.recall }}%
+                    </strong>
+                </p>
+
+                <p>
+                    F1 Score:
+                    <strong>
+                        {{ result.f1_score }}%
+                    </strong>
+                </p>
+
+                <hr>
+
+                <h3>
+                    Features Used
+                </h3>
+
+                <ul>
+
+                    {% for feature in result.features %}
+
+                        <li>
+                            {{ feature }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+
+        {% endif %}
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
